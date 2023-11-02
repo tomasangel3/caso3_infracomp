@@ -1,21 +1,21 @@
 public class Main {
     public static void main(String[] args) {
-        String input = "Your transaction data"; // Replace with your actual transaction data
-        int zeros = 5; // Change the number of zeros as needed
-        int numThreads = 2; // Change the number of threads as needed
+        String input = "Clave"; 
+        int ceros = 5; // Cambiar el numero de ceros
+        int numThreads = 2; 
 
-        long startTime = System.currentTimeMillis();
+        long empiezaTiempo = System.currentTimeMillis();
 
-        // Create and start threads
+        // Crear y empezar Threads
         Thread[] threads = new Thread[numThreads];
         Miner[] miners = new Miner[numThreads];
         for (int i = 0; i < numThreads; i++) {
-            miners[i] = new Miner(input, zeros, i, numThreads);
+            miners[i] = new Miner(input, ceros, i, numThreads);
             threads[i] = new Thread(miners[i]);
             threads[i].start();
         }
 
-        // Wait for threads to finish
+        // Espera a que terminen lod Threads
         for (Thread thread : threads) {
             try {
                 thread.join();
@@ -24,8 +24,8 @@ public class Main {
             }
         }
 
-        long endTime = System.currentTimeMillis();
+        long terminaTiempo = System.currentTimeMillis();
         System.out.println();
-        System.out.println("Mining completed in " + (endTime - startTime) + " milliseconds");
+        System.out.println("Se encontro el hash en " + (terminaTiempo - empiezaTiempo) + " miliseconds");
     }
 }

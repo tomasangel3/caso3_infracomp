@@ -2,12 +2,12 @@ import java.util.Random;
 
 public class Utility {    
     public static String generateRandomString(int length) {
-        String characters = "abcdefghijklmnopqrstuvwxyz";
+        String caracteres = "abcdefghijklmnopqrstuvwxyz";
         StringBuilder sb = new StringBuilder(length);
         Random random = new Random();
 
         for (int i = 0; i < length; i++) {
-            char randomChar = characters.charAt(random.nextInt(characters.length()));
+            char randomChar = caracteres.charAt(random.nextInt(caracteres.length()));
             sb.append(randomChar);
         }
 

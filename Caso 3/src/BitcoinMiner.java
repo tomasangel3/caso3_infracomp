@@ -2,9 +2,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
-public class BitcoinMiner {
-    
-}
 
 class Miner implements Runnable {
     private String input;
@@ -25,12 +22,12 @@ class Miner implements Runnable {
         try {
             md = MessageDigest.getInstance("SHA-256");
             while (true) {
-                String v = generateRandomString(7); // Generate a random string for 'v'
+                String v = generateRandomString(7); // Genera un string aleatorio 'v'
                 String data = input + v;
                 byte[] hash = md.digest(data.getBytes());
 
                 if (hasDesiredLeadingZeros(hash, zeros)) {
-                    System.out.println("Thread " + threadId + " found a solution:");
+                    System.out.println("Thread " + threadId + " encontro una solucion:");
                     System.out.println("Input: " + input);
                     System.out.println("v: " + v);
                     System.out.println("Hash: " + bytesToHex(hash));
