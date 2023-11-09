@@ -8,10 +8,11 @@ class Miner implements Runnable {
     private int zeros;
     private int threadId;
     private int numThreads;
+    private static volatile boolean solutionFound = false;
 
     public Miner(String input, int zeros, int threadId, int numThreads) {
         this.input = input;
-        this.zeros = zeros;
+        this.zeros = zeros/4;
         this.threadId = threadId;
         this.numThreads = numThreads;
     }
@@ -19,25 +20,33 @@ class Miner implements Runnable {
     @Override
     public void run() {
         MessageDigest md;
+        
         try {
             md = MessageDigest.getInstance("SHA-256");
-            while (true) {
+            while (!solutionFound) {
                 String v = generateRandomString(7); // Genera un string aleatorio 'v'
                 String data = input + v;
                 byte[] hash = md.digest(data.getBytes());
 
                 if (hasDesiredLeadingZeros(hash, zeros)) {
-                    System.out.println("Thread " + threadId + " encontro una solucion:");
-                    System.out.println("Input: " + input);
-                    System.out.println("v: " + v);
-                    System.out.println("Hash: " + bytesToHex(hash));
-                    break;
+                    synchronized (Miner.class) {
+
+                        if (!solutionFound) {
+                            solutionFound = true;
+                            System.out.println("Thread " + threadId + " encontró una solución:");
+                            System.out.println("Input: " + input);
+                            System.out.println("v: " + v);
+                            System.out.println("Hash: " + bytesToHex(hash));
+                        }
+                    }
                 }
             }
-        } catch (NoSuchAlgorithmException e) {
+        
+        }   catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
     }
+
 
     public static String generateRandomString(int length) {
         String characters = "abcdefghijklmnopqrstuvwxyz";
@@ -52,19 +61,21 @@ class Miner implements Runnable {
         return sb.toString();
     }
 
+
     public static boolean hasDesiredLeadingZeros(byte[] hash, int zeros) {
-        for (int i = 0; i < zeros / 2; i++) {
-            if (hash[i] != 0) {
-                return false;
-            }
-        }
-        int remainingZeros = zeros % 2;
-        if (remainingZeros == 0) {
-            return true;
-        } else {
-            return (hash[zeros / 2] & 0xF0) == 0;
+    for (int i = 0; i < zeros / 2; i++) {
+        if (hash[i] != 0) {
+            return false;
         }
     }
+    if (zeros % 2 == 0) {
+        return true;
+    }
+    return (hash[zeros / 2] & 0xF0) == 0;
+}
+
+
+    
 
     // Include the same generateRandomString, calculateSHA256, and hasDesiredLeadingZeros functions as before
 
@@ -72,7 +83,7 @@ class Miner implements Runnable {
 // bytesToHex function to convert hash to a hexadecimal string
 public static String bytesToHex(byte[] bytes) {
     StringBuilder hexString = new StringBuilder();
-    for (byte b : bytes) {
+    for (byte b : bytes) {                          //00 0b ff op el byte se puede leer asi, entonces no se pasa la cadena completa, sino cada bite que esta corriendo
         String hex = Integer.toHexString(0xff & b);
         if (hex.length() == 1) {
             hexString.append('0');
