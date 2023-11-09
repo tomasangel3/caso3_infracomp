@@ -1,7 +1,8 @@
 public class Main {
     public static void main(String[] args) {
+
         String input = "clave"; 
-        int ceros = 36; // Cambiar el numero de ceros
+        int ceros = 20; // Cambiar el numero de ceros
         int numThreads = 2; 
 
         long empiezaTiempo = System.currentTimeMillis();
