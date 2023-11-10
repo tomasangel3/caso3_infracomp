@@ -9,12 +9,14 @@ class Miner implements Runnable {
     private int threadId;
     private int numThreads;
     private static volatile boolean solutionFound = false;
+    private String algorithm;
 
-    public Miner(String input, int zeros, int threadId, int numThreads) {
+    public Miner(String input, int zeros, int threadId, int numThreads, String algorithm) {
         this.input = input;
         this.zeros = zeros/4;
         this.threadId = threadId;
         this.numThreads = numThreads;
+        this.algorithm = algorithm;
     }
 
     @Override
@@ -22,7 +24,7 @@ class Miner implements Runnable {
         MessageDigest md;
         
         try {
-            md = MessageDigest.getInstance("SHA-256");
+            md = MessageDigest.getInstance(algorithm);
             while (!solutionFound) {
                 String v = generateRandomString(7); // Genera un string aleatorio 'v'
                 String data = input + v;
